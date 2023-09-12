@@ -9,8 +9,6 @@ if __name__ == "__main__":
         wechat_uid = os.environ['WECHAT_UID']
         accounts = os.environ['TIKTOK_ACCOUNTS']
 
-        print(accounts)
-    
         list = accounts.split(',')
         users = []
         result = ""
@@ -18,10 +16,10 @@ if __name__ == "__main__":
             info = tiktok_utils.getUserInfo(item, tiktok_cookie)
             users.append(info)
             print(item)
-            print(info)
             result += info.toString()
 
-        weixin.wxpusher_send_by_webapi(result, wxpusher_token, wechat_uid)
+        weixin.wxpusher_send_by_webapi(
+            result, "TikTok日报", wxpusher_token, wechat_uid)
     except Exception as err:
         print("运行错误")
         print(err)

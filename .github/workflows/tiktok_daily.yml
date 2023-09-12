@@ -1,9 +1,8 @@
 name: TikTok日报
 
 on:
-  push:
-    branches:
-      - test
+  schedule:
+    - cron: '30 12 * * *'  # 每天的20:30执行
 
 jobs:
   run_python_script:
