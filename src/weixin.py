@@ -6,7 +6,7 @@ def wxpusher_send_by_webapi(msg,app_token,uid):
     data = {
         "appToken":app_token,
         "content":msg,
-        "summary":msg[:99], # 该参数可选，默认为 msg 的前10个字符
+        "summary":"Freedom&Money 日报", # 该参数可选，默认为 msg 的前10个字符
         "contentType":1,
         "uids":[ uid, ],
         }

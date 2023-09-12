@@ -1,0 +1,33 @@
+name: TikTok日报
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  run_python_script:
+    runs-on: ubuntu-latest
+
+    env:
+      TIKTOK_COOKIE: ${{ secrets.TIKTOK_COOKIE }}
+      WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
+      WECHAT_UID: ${{ vars.WECHAT_UID }}
+      TIKTOK_ACCOUNTS: ${{ vars.TIKTOK_ACCOUNTS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+
+      - name: 安装依赖环境
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 调用python脚本
+        run: python src/main_tiktok.py # 请将 your_script.py 替换为你的 Python 脚本文件名
