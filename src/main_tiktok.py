@@ -14,9 +14,13 @@ if __name__ == "__main__":
         result = ""
         for item in list:
             info = tiktok_utils.getUserInfo(item, tiktok_cookie)
-            users.append(info)
-            print(item)
-            result += info.toString()
+            if info == None:
+                print("获取用户信息失败")
+                result += "用户信息丢失:"+item
+            else:
+                users.append(info)
+                print(item)
+                result += info.toString()
 
         weixin.wxpusher_send_by_webapi(
             result, "TikTok日报", wxpusher_token, wechat_uid)
