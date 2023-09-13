@@ -5,7 +5,7 @@ import config
 
 if __name__ == "__main__":
     try:
-        if config.config['switch_run']:
+        if config.user_config['switch_run']:
             tiktok_cookie = config.user_config['tiktok_cookie']
             wxpusher_token = config.user_config['wxpusher_token']
             wechat_uid = os.environ['WECHAT_UID']
