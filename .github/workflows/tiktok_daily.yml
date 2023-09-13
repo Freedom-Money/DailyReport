@@ -1,16 +1,17 @@
 name: TikTok日报
 
 on:
-  schedule:
-    - cron: '30 12 * * *'  # 每天的20:30执行
+  #schedule:
+  #  - cron: '10 12 * * *'  # 每天的20:10执行
+  push:
+    branches:
+      - master
 
 jobs:
   run_python_script:
     runs-on: ubuntu-latest
 
     env:
-      TIKTOK_COOKIE: ${{ secrets.TIKTOK_COOKIE }}
-      WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
       WECHAT_UID: ${{ vars.WECHAT_UID }}
       TIKTOK_ACCOUNTS: ${{ vars.TIKTOK_ACCOUNTS }}
 
