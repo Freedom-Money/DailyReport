@@ -29,5 +29,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 调用python脚本
-        run: python src/main_tiktok.py # 请将 your_script.py 替换为你的 Python 脚本文件名
+      - name: 运行python脚本
+        run: python src/main_tiktok.py 
+      
+      - name: commit
+        run: |
+          git config --global user.email yhonglai@163.com
+          git config --global user.name 一刀
+          git add .
+          git commit -m "update log" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
