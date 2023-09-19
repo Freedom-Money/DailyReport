@@ -2,7 +2,7 @@ import tiktok_utils
 import weixin
 import os
 import config
-import json
+import pickle
 
 file_path = 'data.json'
 
@@ -16,9 +16,9 @@ if __name__ == "__main__":
 
             data = None
             if os.path.exists(file_path):
-                with open(file_path, 'r') as json_file:
-                    data = json.load(json_file)
-                    print(data)
+                # 打开保存对象的文件，使用二进制读取模式
+                with open('data.pkl', 'rb') as file:
+                    data = pickle.load(file)
             else:
                 print(f"The file {file_path} does not exist.")
 
@@ -55,8 +55,8 @@ if __name__ == "__main__":
                 result, "TikTok日报", wxpusher_token, wechat_uid)
 
             # 保存文件
-            with open(file_path, 'w') as json_file:
-                json.dump(users, json_file)
+            with open('data.pkl', 'wb') as file:
+                pickle.dump(users, file)
         else:
             print('本次不执行')
     except Exception as err:
