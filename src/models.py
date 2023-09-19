@@ -21,7 +21,7 @@ class UserInfo:
 """.format(self.nickname, self.followCount, self.fansCount, self.likeCount, self.videoCount)
 
         if yesterdayFollow is not None:
-            reslut += """关注数量变化：{0}
+            result += """关注数量变化：{0}
 粉丝数量变化：{1}
 点赞数量变化：{2}
 视频数量变化：{3}
