@@ -1,11 +1,11 @@
 name: TikTok日报
 
 on:
-  schedule:
-    - cron: '10 12 * * *'  # 每天的20:10执行
-  # push:
-  #   branches:
-  #     - master
+  # schedule:
+  #   - cron: '10 12 * * *'  # 每天的20:10执行
+  push:
+    branches:
+      - master
 
 jobs:
   run_python_script:
@@ -34,11 +34,14 @@ jobs:
       
       - name: commit
         run: |
-          git config --global user.email yhonglai@163.com
-          git config --global user.name 一刀
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+          git config --global user.name github-actions[bot]
           git add .
           git commit -m "update log" -a
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+          force: true
