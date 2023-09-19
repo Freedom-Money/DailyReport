@@ -26,7 +26,7 @@ class UserInfo:
 点赞数量变化：{2}
 视频数量变化：{3}
 
-""".format(self.followCount-yesterdayFollow, self.fansCount-yseterdatFans, self.likeCount-yesterdayLike, self.videoCount-yesterdayVideo)
+""".format(self.followCount-int(yesterdayFollow), self.fansCount-int(yseterdatFans), self.likeCount-int(yesterdayLike), self.videoCount-int(yesterdayVideo))
         else:
             result += '\n'
         return result
