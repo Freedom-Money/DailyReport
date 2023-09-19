@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
             # 保存文件
             with open(file_path, 'w') as json_file:
-                json.dump(result, json_file)
+                json.dump(users, json_file)
         else:
             print('本次不执行')
     except Exception as err:
