@@ -38,7 +38,7 @@ if __name__ == "__main__":
                     try:
                         if data is not None:
                             for tmpItem in data:
-                                if tmpItem.get("username") == info.username:
+                                if tmpItem.username == info.username:
                                     yesterday = tmpItem
                                     break
                     except Exception as err:
