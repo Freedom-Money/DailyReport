@@ -38,7 +38,7 @@ if __name__ == "__main__":
                     try:
                         if data is not None:
                             for tmpItem in data:
-                                if tmpItem["username"] == info.username:
+                                if tmpItem.username == info.username:
                                     yesterday = tmpItem
                                     break
                     except Exception as err:
@@ -48,8 +48,8 @@ if __name__ == "__main__":
                     if yesterday == None:
                         result += info.toString()
                     else:
-                        result += info.toString(yesterday["followCount"], yesterday["fansCount"],
-                                                yesterday["likeCount"], yesterday["videoCount"])
+                        result += info.toString(yesterday.followCount, yesterday.fansCount,
+                                                yesterday.likeCount, yesterday.videoCount)
 
             weixin.wxpusher_send_by_webapi(
                 result, "TikTok日报", wxpusher_token, wechat_uid)
