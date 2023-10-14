@@ -16,14 +16,14 @@ class UserInfo:
         result = """账号：{0}
 关注数量：{1}
 粉丝数量：{2}
-点赞数量：{3}
+获赞数量：{3}
 视频数量：{4}
 """.format(self.nickname, self.followCount, self.fansCount, self.likeCount, self.videoCount)
 
         if yesterdayFollow is not None:
             result += """关注数量变化：{0}
 粉丝数量变化：{1}
-点赞数量变化：{2}
+获赞数量变化：{2}
 视频数量变化：{3}
 
 """.format(self.followCount-int(yesterdayFollow), self.fansCount-int(yseterdatFans), self.likeCount-int(yesterdayLike), self.videoCount-int(yesterdayVideo))

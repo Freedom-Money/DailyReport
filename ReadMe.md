@@ -11,7 +11,7 @@
 
 ## 2. 设置WxPusher UID
 
-1. 微信点击https://wxpusher.zjiecode.com/wxuser/?type=1&id=51499#/follow。关注公众号。
+1. 微信中点击 https://wxpusher.zjiecode.com/wxuser/?type=1&id=51499#/follow  关注公众号。
 2. 公众号右下角【我的】获取uid。
 3. 【Settings】-【Security】-【Secrets and variables】-【Actions】-【Variables】处，添加变量。名称为【WECHAT_UID】,内容为上步骤获取的uid。
 
