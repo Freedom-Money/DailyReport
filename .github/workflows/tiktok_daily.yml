@@ -31,7 +31,7 @@ jobs:
 
       - name: 运行python脚本
         run: |
-          if [ -z "${{ secrets.WECHAT_UID }}" ] || [ -z "${{ secrets.TIKTOK_ACCOUNTS }}" ]; then
+          if [ -z "${{ vars.WECHAT_UID }}" ] || [ -z "${{ vars.TIKTOK_ACCOUNTS }}" ]; then
             echo "没有配置WxPusher或者TikTok账号列表"
           else
             python src/main_tiktok.py
