@@ -30,15 +30,18 @@ jobs:
           pip install -r requirements.txt
 
       - name: 运行python脚本
+        id: python_scripts
         run: |
           if [ -z "${{ vars.WECHAT_UID }}" ] || [ -z "${{ vars.TIKTOK_ACCOUNTS }}" ]; then
-            echo "没有配置WxPusher或者TikTok账号列表"
+            echo "没有配置WxPusher或者TikTok账号列表，不执行脚本"
+            echo "::set-output name=code_generated::false"
           else
             python src/main_tiktok.py
+            echo "::set-output name=code_generated::true"
           fi
       
       - name: commit
-        if: success() 
+        if: ${{ steps.python_scripts.outputs.code_generated == 'true' }}
         run: |
           git config --global user.email github-actions[bot]@users.noreply.github.com
           git config --global user.name github-actions[bot]
@@ -46,7 +49,7 @@ jobs:
           git commit -m "更新日常数据" -a
 
       - name: Push changes
-        if: success()
+        if: ${{ steps.python_scripts.outputs.code_generated == 'true' }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
