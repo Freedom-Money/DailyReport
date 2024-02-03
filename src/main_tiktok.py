@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
         accounts = set()
         try:
-            accounts = parse_yuque_config(yuque_doc_uid)
+            accounts = parse_yuque_config.parse_yuque_config(yuque_doc_uid)
         except Exception as err:
             print("获取语雀配置失败")
             send_report("TikTok日报 - 运行异常", "读取语雀配置错误，请检查配置", None)
