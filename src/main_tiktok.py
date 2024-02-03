@@ -113,7 +113,7 @@ if __name__ == "__main__":
             pickle.dump(users, file)
         tmp_excel = os.path.abspath(f'{doc_uid}.xlsx')
         write_to_excel(users, tmp_excel)
-        send_report("TikTok日报", result, daily_data_file)
+        send_report("TikTok日报", result, tmp_excel)
 
         # 删除excel文件
         if os.path.exists(tmp_excel):
