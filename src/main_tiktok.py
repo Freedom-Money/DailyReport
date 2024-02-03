@@ -65,17 +65,17 @@ if __name__ == "__main__":
         # 读取项目配置
         tiktok_cookie = config.user_config['tiktok_cookie']
         # 读取环境变量配置
-        yuque_doc_uid = os.environ['YUQUE_DOC_UID']
+        yuque_doc_url = os.environ['YUQUE_DOC_URL']
 
         accounts = set()
         try:
-            accounts = parse_yuque_config.parse_yuque_config(yuque_doc_uid)
+            accounts = parse_yuque_config.parse_yuque_config(yuque_doc_url)
         except Exception as err:
             print("获取语雀配置失败")
             send_report("TikTok日报 - 运行异常", "读取语雀配置错误，请检查配置", None)
             raise err
-
-        daily_data_file = os.path.abspath(f'{yuque_doc_uid}.pkl')
+        doc_uid = yuque_doc_url.split('/')[-1]
+        daily_data_file = os.path.abspath(f'{doc_uid}.pkl')
         data = None
         if os.path.exists(daily_data_file):
             # 打开保存对象的文件，使用二进制读取模式
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         # 保存文件
         with open(daily_data_file, 'wb') as file:
             pickle.dump(users, file)
-        tmp_excel = os.path.abspath(f'{yuque_doc_uid}.xlsx')
+        tmp_excel = os.path.abspath(f'{doc_uid}.xlsx')
         write_to_excel(users, tmp_excel)
         send_report("TikTok日报", result, daily_data_file)
 
