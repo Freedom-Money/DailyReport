@@ -15,6 +15,10 @@ class AccountInfo:
         self.like_count = like_count
         self.video_count = video_count
         self.have_yesterday_data = False
+        self.follow_change = 0
+        self.fans_change = 0
+        self.like_change = 0
+        self.video_change = 0
 
     def set_yesterday(self, yesterday_follow: int, yesterday_fans: int, yesterday_like: int, yesterday_video: int):
         self.follow_change = self.follow_count - yesterday_follow
