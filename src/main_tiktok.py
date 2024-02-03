@@ -47,7 +47,7 @@ def write_to_excel(data: list, file_path: str):
         tmp_list = []
         for item in data:
             tmp_list.append([item.number, item.operater, item.uid,
-                            item.username, item.fans_count, item.follow_count,
+                            item.nick_name, item.fans_count, item.follow_count,
                             item.like_count, item.video_count, item.fans_change,
                             item.follow_change, item.like_change, item.video_change, "", item.remarks])
         df = pd.DataFrame(tmp_list)
