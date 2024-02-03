@@ -16,6 +16,7 @@ def parse_yuque_config(yuque_doc_uid: str) -> set:
     try:
         url = f"https://www.yuque.com/api/docs/{yuque_doc_uid}?include_contributors=true&include_like=true&include_hits=true&merge_dynamic_data=false&book_id=37366329"
         response = requests.get(url)
+        print(response.text)
         data = json.loads(response.text)
         content = data['data']['content']
         print("表格内容："+content)
