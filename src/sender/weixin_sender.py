@@ -1,7 +1,7 @@
 import requests
 
 
-def wxpusher_send_by_webapi(msg, summary, app_token, uid):
+def send(summary, msg, app_token, uid):
     """利用 wxpusher 的 web api 发送 json 数据包，实现微信信息的发送"""
     webapi = 'http://wxpusher.zjiecode.com/api/send/message'
     data = {

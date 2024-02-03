@@ -1,64 +1,124 @@
 import tiktok_utils
-import weixin
+import sender.weixin_sender as weixin_sender
 import os
 import config
 import pickle
+import parse_yuque_config
+import sender.email_sender as email_sender
+import pandas as pd
 
-file_path = 'data.pkl'
+
+def send_report(subject: str, body: str, file_path: str):
+    """发送消息
+
+    Args:
+        subject (str): _description_
+        body (str): _description_
+        file_path (str): _description_
+    """
+    # 发送微信
+    wxpusher_token = config.user_config['wxpusher_token']
+    wechat_uid = os.environ['WECHAT_UID']
+    if (wechat_uid != None and wechat_uid != ""):
+        weixin_sender.send(body, subject, wxpusher_token, wechat_uid)
+    # 发送邮件
+    receive_email = os.environ['RECEIVE_EMAIL']
+    if (receive_email != None and receive_email != ""):
+        if receive_email.find(",") > 0:
+            receive_emails = receive_email.split(",")
+            for item in receive_emails:
+                email_sender.send(
+                    os.environ['SEND_EMAIL'], os.environ['SEND_EMAIL_PASSWORD'], item, body, file_path)
+        else:
+            email_sender.send(
+                os.environ['SEND_EMAIL'], os.environ['SEND_EMAIL_PASSWORD'], receive_email, body, file_path)
+
+
+def write_to_excel(data: list, file_path: str):
+    """保存数据到excel
+
+    Args:
+        data (list): 数据
+        file_path (str): 文件路径
+    """
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        tmp_list = []
+        for item in data:
+            tmp_list.append([item.number, item.operater, item.uid,
+                            item.username, item.fans_count, item.follow_count,
+                            item.like_count, item.video_count, item.fans_change,
+                            item.follow_change, item.like_change, item.video_change, "", item.remarks])
+        df = pd.DataFrame(tmp_list)
+        df.columns = ['机号', '操作员', 'uid', '昵称', '粉丝数', '关注数', '点赞数',
+                      '视频数', '今日粉丝变化', '今日关注变化', '今日点赞变化', '今日视频数量变化', '今日浏览量变化', '备注']
+
+        df.to_excel(file_path, index=False)
+    except Exception as err:
+        print("保存文件错误")
+        print(err)
+
 
 if __name__ == "__main__":
     try:
-        if config.user_config['switch_run']:
-            tiktok_cookie = config.user_config['tiktok_cookie']
-            wxpusher_token = config.user_config['wxpusher_token']
-            wechat_uid = os.environ['WECHAT_UID']
-            accounts = os.environ['TIKTOK_ACCOUNTS']
+        # 读取项目配置
+        tiktok_cookie = config.user_config['tiktok_cookie']
+        # 读取环境变量配置
+        yuque_doc_uid = os.environ['YUQUE_DOC_UID']
 
-            data = None
-            if os.path.exists(file_path):
-                # 打开保存对象的文件，使用二进制读取模式
-                with open(file_path, 'rb') as file:
-                    data = pickle.load(file)
-            else:
-                print(f"The file {file_path} does not exist.")
+        accounts = set()
+        try:
+            accounts = parse_yuque_config(yuque_doc_uid)
+        except Exception as err:
+            print("获取语雀配置失败")
+            send_report("TikTok日报 - 运行异常", "读取语雀配置错误，请检查配置", None)
+            raise err
 
-            list = accounts.split(',')
-            users = []
-            result = ""
-            for item in list:
-                info = tiktok_utils.getUserInfo(item, tiktok_cookie)
-                if info == None:
-                    print("获取用户信息失败")
-                    result += "用户信息丢失:"+item
-                else:
-                    users.append(info)
-                    print(item)
-
-                    yesterday = None
-                    try:
-                        if data is not None:
-                            for tmpItem in data:
-                                if tmpItem.username == info.username:
-                                    yesterday = tmpItem
-                                    break
-                    except Exception as err:
-                        print('获取对比信息错误')
-                        print(err)
-
-                    if yesterday == None:
-                        result += info.toString()
-                    else:
-                        result += info.toString(yesterday.followCount, yesterday.fansCount,
-                                                yesterday.likeCount, yesterday.videoCount)
-
-            weixin.wxpusher_send_by_webapi(
-                result, "TikTok日报", wxpusher_token, wechat_uid)
-
-            # 保存文件
-            with open(file_path, 'wb') as file:
-                pickle.dump(users, file)
+        daily_data_file = os.path.abspath(f'{yuque_doc_uid}.pkl')
+        data = None
+        if os.path.exists(daily_data_file):
+            # 打开保存对象的文件，使用二进制读取模式
+            with open(daily_data_file, 'rb') as file:
+                data = pickle.load(file)
         else:
-            print('本次不执行')
+            print(f"The file {daily_data_file} does not exist.")
+        users = []
+        result = ""
+        for item in accounts:
+            info = tiktok_utils.get_account_info(item, tiktok_cookie)
+            if info == None:
+                print("获取用户信息失败")
+                result += f'\n用户信息丢失:{item.uid}({item.operater} - {item.number})'
+            else:
+                users.append(info)
+                yesterday = None
+                try:
+                    if data is not None:
+                        for tmpItem in data:
+                            if tmpItem.username == info.username:
+                                yesterday = tmpItem
+                                break
+                except Exception as err:
+                    print('获取对比信息错误')
+                    print(err)
+
+                if yesterday != None:
+                    info.set_yesterday(int(yesterday.follow_count), int(yesterday.fans_count),
+                                       int(yesterday.like_count), int(yesterday.video_count))
+                result += info.toString()
+
+        # 保存文件
+        with open(daily_data_file, 'wb') as file:
+            pickle.dump(users, file)
+        tmp_excel = os.path.abspath(f'{yuque_doc_uid}.xlsx')
+        write_to_excel(users, tmp_excel)
+        send_report("TikTok日报", result, daily_data_file)
+
+        # 删除excel文件
+        if os.path.exists(tmp_excel):
+            os.remove(tmp_excel)
+
     except Exception as err:
         print("运行错误")
         print(err)

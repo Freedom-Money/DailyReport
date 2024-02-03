@@ -7,10 +7,6 @@ jobs:
   run_python_script:
     runs-on: ubuntu-latest
 
-    env:
-      WECHAT_UID: ${{ vars.WECHAT_UID }}
-      TIKTOK_ACCOUNTS: ${{ vars.TIKTOK_ACCOUNTS }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,8 +23,4 @@ jobs:
 
       - name: 运行python脚本
         run: |
-          if [ -z "${{ vars.WECHAT_UID }}" ] || [ -z "${{ vars.TIKTOK_ACCOUNTS }}" ]; then
-            echo "没有配置WxPusher或者TikTok账号列表"
-          else
-            python src/main_tiktok.py
-          fi
+          python src/main_tiktok.py
