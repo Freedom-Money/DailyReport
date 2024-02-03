@@ -3,13 +3,17 @@ name: TikTok日报
 on:
   schedule:
     - cron: '0 12 * * *'  # 每天的20:00执行
-  # push:
-  #   branches:
-  #     - master
 
 jobs:
   run_python_script:
     runs-on: ubuntu-latest
+
+    env:
+      WECHAT_UID: ${{ vars.WECHAT_UID }}
+      TIKTOK_ACCOUNTS: ${{ vars.TIKTOK_ACCOUNTS }}
+      RECEIVE_EMAIL: ${{ vars.RECEIVE_EMAIL }}
+      SEND_EMAIL: ${{ vars.SEND_EMAIL }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
     steps:
       - name: Checkout repository

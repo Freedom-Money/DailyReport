@@ -122,4 +122,3 @@ if __name__ == "__main__":
     except Exception as err:
         print("运行错误")
         print(err)
-        print(os.environ)
