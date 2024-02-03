@@ -51,6 +51,7 @@ def get_account_info(account_config: AccountConfig, cookie, proxies=None):
             url=reqeust_url, headers=headers, proxies=proxies)
 
         if not response.ok or len(response.text) == 0:
+            print(response)
             return None
         json_result = json.loads(response.text, strict=False)
 
@@ -61,4 +62,5 @@ def get_account_info(account_config: AccountConfig, cookie, proxies=None):
                            json_result['userInfo']['stats']['heartCount'],
                            json_result['userInfo']['stats']['videoCount'],)
     except Exception as err:
+        print(err)
         return None
