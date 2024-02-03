@@ -2,9 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from models.AccountConfig import AccountConfig
+import re
 
 
-def parse_yuque_config(yuque_doc_uid: str) -> set:
+def parse_yuque_config(config_url: str) -> set:
     """解析语雀账号配置
 
     Args:
@@ -14,9 +15,12 @@ def parse_yuque_config(yuque_doc_uid: str) -> set:
         set: 账号配置集合
     """
     try:
-        url = f"https://www.yuque.com/api/docs/{yuque_doc_uid}?include_contributors=true&include_like=true&include_hits=true&merge_dynamic_data=false&book_id=37366329"
+        book_id = get_book_id(config_url)
+        if book_id == None:
+            raise KeyError("获取配置book_id失败")
+        doc_uid = config_url.split('/')[-1]
+        url = f"https://www.yuque.com/api/docs/{doc_uid}?include_contributors=true&include_like=true&include_hits=true&merge_dynamic_data=false&book_id={book_id}"
         response = requests.get(url)
-        print(response.text)
         data = json.loads(response.text)
         content = data['data']['content']
         print("表格内容："+content)
@@ -37,3 +41,21 @@ def parse_yuque_config(yuque_doc_uid: str) -> set:
     except Exception as err:
         print(err)
         raise ValueError("解析语雀配置失败") from err
+
+
+def get_book_id(url: str) -> str:
+    """获取book_id参数
+
+    Args:
+        url (str): _description_
+
+    Returns:
+        str: _description_
+    """
+    response = requests.get(url)
+    match = re.search(r'book_id%22%3A(\d+)', response.text)
+    if match:
+        book_id = match.group(1)
+        print(book_id)
+        return book_id
+    return None
