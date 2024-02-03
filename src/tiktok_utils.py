@@ -42,7 +42,6 @@ def get_account_info(account_config: AccountConfig, cookie, proxies=None):
 
         tmp_url = "https://www.tiktok.com/api/user/detail/?aid=1988&app_language=zh-Hans&app_name=tiktok_web&browser_language=zh-CN&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F113.0.0.0%20Safari%2F537.36&channel=tiktok_web&cookie_enabled=true&device_id=7159778424045831681&device_platform=web_pc&focus_state=false&from_page=user&history_len=17&is_fullscreen=false&is_page_visible=true&language=zh-Hans&os=windows&priority_region=TW&referer=&region=TW&screen_height=900&screen_width=1440&tz_name=Asia%2FShanghai&uniqueId={}&webcast_language=zh-Hans&msToken={}".format(
             account_config.uid, get_ms_token(headers['cookie']))
-        
         print(tmp_url)
 
         query = urllib.parse.urlparse(tmp_url).query
@@ -56,7 +55,6 @@ def get_account_info(account_config: AccountConfig, cookie, proxies=None):
             print(response)
             return None
         json_result = json.loads(response.text, strict=False)
-        print(response.text)
         return AccountInfo(account_config,
                            json_result['userInfo']['user']['nickname'],
                            json_result['userInfo']['stats']['followingCount'],
