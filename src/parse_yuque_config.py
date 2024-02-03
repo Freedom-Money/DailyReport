@@ -18,6 +18,7 @@ def parse_yuque_config(yuque_doc_uid: str) -> set:
         response = requests.get(url)
         data = json.loads(response.text)
         content = data['data']['content']
+        print("表格内容："+content)
         soup = BeautifulSoup(content, "html.parser")
         configs = soup.find_all("table")
         rows = configs[0].find_all("tr")
@@ -33,4 +34,5 @@ def parse_yuque_config(yuque_doc_uid: str) -> set:
 
         return results
     except Exception as err:
+        print(err)
         raise ValueError("解析语雀配置失败") from err
