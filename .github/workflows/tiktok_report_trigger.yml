@@ -12,7 +12,7 @@ jobs:
       YUQUE_DOC_UID: ${{ vars.YUQUE_DOC_UID }}
       RECEIVE_EMAIL: ${{ vars.RECEIVE_EMAIL }}
       SEND_EMAIL: ${{ vars.SEND_EMAIL }}
-      EMAIL_PASSWORD: ${{ secrets.SEND_EMAIL_PASSWORD }}
+      SEND_EMAIL_PASSWORD: ${{ secrets.SEND_EMAIL_PASSWORD }}
 
     steps:
       - name: Checkout repository
