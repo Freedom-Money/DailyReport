@@ -104,9 +104,6 @@ if __name__ == "__main__":
                                 yesterday = tmpItem
                                 info.set_yesterday(int(yesterday.follow_count), int(yesterday.fans_count),
                                                    int(yesterday.like_count), int(yesterday.video_count))
-                                print("点赞数：" + str(info.like_count) +
-                                      "昨日点赞数：" + str(yesterday.like_count) +
-                                      "变化值:"+str(info.like_change))
                                 break
                 except Exception as err:
                     print('获取对比信息错误')
