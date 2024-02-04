@@ -9,6 +9,7 @@ class AccountInfo:
             self.number = account.number
             self.operater = account.operater
             self.remarks = account.remarks
+            self.deviceId = account.deviceId
         self.nick_name = nick_name
         self.follow_count = follow_count
         self.fans_count = fans_count
