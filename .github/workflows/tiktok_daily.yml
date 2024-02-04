@@ -2,7 +2,7 @@ name: TikTok日报
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # 每天的20:00执行
+    - cron: '50 11 * * *'  # 每天的19:50执行
 
 jobs:
   run_python_script:
