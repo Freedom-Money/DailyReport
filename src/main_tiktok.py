@@ -102,14 +102,15 @@ if __name__ == "__main__":
                         for tmpItem in data:
                             if tmpItem.uid == info.uid:
                                 yesterday = tmpItem
+                                info.set_yesterday(int(yesterday.follow_count), int(yesterday.fans_count),
+                                                   int(yesterday.like_count), int(yesterday.video_count))
+                                print("点赞数：" + str(info.like_count) +
+                                      "昨日点赞数：" + str(yesterday.like_count))
                                 break
                 except Exception as err:
                     print('获取对比信息错误')
                     print(err)
 
-                if yesterday != None:
-                    info.set_yesterday(int(yesterday.follow_count), int(yesterday.fans_count),
-                                       int(yesterday.like_count), int(yesterday.video_count))
             result += info.toString()
             users.append(info)
 
