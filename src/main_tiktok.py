@@ -52,7 +52,7 @@ def write_to_excel(data: list, file_path: str):
                 tmp_list.append([item.number, item.operater, item.uid, item.deviceId,
                                 "-", "-", "-", "-", "-", "-", "-", "-", "-", 'uid配置错误，信息获取失败'])
             else:
-                tmp_list.append([item.number, item.operater, item.uid, item.deviceId, item.video_change, "-", item.fans_change, item.fans_count,
+                tmp_list.append([item.number, item.operater, item.uid, item.deviceId, item.video_change, "", item.fans_change, item.fans_count,
                                 item.follow_count, item.like_count, item.video_count, item.follow_change, item.like_change,  item.remarks])
         df = pd.DataFrame(tmp_list)
         df.columns = ['序号', '名字', '账号名', '机号', '今日视频量', '今日浏览量',
