@@ -23,10 +23,10 @@ class AccountInfo:
         self.is_valid = True
 
     def set_yesterday(self, yesterday_follow: int, yesterday_fans: int, yesterday_like: int, yesterday_video: int):
-        self.follow_change = self.follow_count - yesterday_follow
-        self.fans_change = self.fans_count - yesterday_fans
-        self.like_change = self.like_change - yesterday_like
-        self.video_change = self.video_count - yesterday_video
+        self.follow_change = int(self.follow_count) - yesterday_follow
+        self.fans_change = int(self.fans_count) - yesterday_fans
+        self.like_change =  int(self.like_count) - yesterday_like
+        self.video_change = int(self.video_count) - yesterday_video
         self.have_yesterday_data = True
 
     def set_invalid(self):
