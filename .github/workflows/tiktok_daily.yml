@@ -2,7 +2,7 @@ name: TikTok日报
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # 每天的20:00执行
+    - cron: '0 15 * * *'  # 每天的20:00执行
 
 jobs:
   run_python_script:
@@ -32,7 +32,13 @@ jobs:
       - name: 运行python脚本
         id: python_scripts
         run: |
-          python src/main_tiktok.py
+          if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
+            echo "没有配置WxPusher或者TikTok账号列表，不执行脚本"
+            echo "::set-output name=code_generated::false"
+          else
+            python src/main_tiktok.py
+            echo "::set-output name=code_generated::true"
+          fi
       
       - name: Commit
         if: success() 
