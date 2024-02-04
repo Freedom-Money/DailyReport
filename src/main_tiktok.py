@@ -77,8 +77,7 @@ if __name__ == "__main__":
             print("获取语雀配置失败")
             send_report("TikTok日报 - 运行异常", "读取语雀配置错误，请检查配置", None)
             raise err
-        current_date = datetime.now().strftime("%Y%m%d")
-        doc_uid = "Tiktok日报_{}".format(current_date)
+        doc_uid = yuque_doc_url.split('/')[-1]
         daily_data_file = os.path.abspath(f'{doc_uid}.pkl')
         data = None
         if os.path.exists(daily_data_file):
@@ -115,7 +114,9 @@ if __name__ == "__main__":
         # 保存文件
         with open(daily_data_file, 'wb') as file:
             pickle.dump(users, file)
-        tmp_excel = f'{doc_uid}.xlsx'
+
+        current_date = datetime.now().strftime("%Y%m%d")
+        tmp_excel = f'TikTok日报_{current_date}.xlsx'
         write_to_excel(users, tmp_excel)
         send_report("TikTok日报", result, tmp_excel)
 
