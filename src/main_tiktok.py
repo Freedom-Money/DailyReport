@@ -100,7 +100,7 @@ if __name__ == "__main__":
                 try:
                     if data is not None:
                         for tmpItem in data:
-                            if tmpItem.username == info.username:
+                            if tmpItem.uid == info.uid:
                                 yesterday = tmpItem
                                 break
                 except Exception as err:
