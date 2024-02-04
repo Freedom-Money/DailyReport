@@ -33,7 +33,7 @@ jobs:
         id: python_scripts
         run: |
           if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
-            echo "没有配置WxPusher或者TikTok账号列表，不执行脚本"
+            echo "没有配置TikTok账号，不执行脚本"
             echo "::set-output name=code_generated::false"
           else
             python src/main_tiktok.py
