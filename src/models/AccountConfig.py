@@ -9,7 +9,7 @@ class AccountConfig:
             deviceId (str): 机号/设备号
             remarks (str): 备注
         """
-        self.uid = uid
+        self.uid = uid.strip()
         self.operater = operater
         self.number = number
         self.remarks = remarks
