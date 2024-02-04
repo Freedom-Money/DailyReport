@@ -2,7 +2,7 @@ from .AccountConfig import AccountConfig
 
 
 class AccountInfo:
-    def __init__(self, account: AccountConfig, nick_name: str,  follow_count, fans_count, like_count, video_count) -> None:
+    def __init__(self, account: AccountConfig, nick_name: str,  follow_count: int, fans_count: int, like_count: int, video_count: int) -> None:
         self.account = account
         if account != None:
             self.uid = account.uid
@@ -20,6 +20,7 @@ class AccountInfo:
         self.fans_change = 0
         self.like_change = 0
         self.video_change = 0
+        self.is_valid = True
 
     def set_yesterday(self, yesterday_follow: int, yesterday_fans: int, yesterday_like: int, yesterday_video: int):
         self.follow_change = self.follow_count - yesterday_follow
@@ -28,7 +29,12 @@ class AccountInfo:
         self.video_change = self.video_count - yesterday_video
         self.have_yesterday_data = True
 
+    def set_invalid(self):
+        self.is_valid = False
+
     def toString(self):
+        if self.is_valid == False:
+            return f'\n用户信息丢失:{self.uid}({self.operater} - {self.number})'
         result = """
 账号：{0}
 关注数量：{1}
