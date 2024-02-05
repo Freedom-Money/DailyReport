@@ -31,24 +31,26 @@ jobs:
       - name: 运行python脚本
         id: python_scripts
         run: |
-          if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
-            echo "没有配置TikTok账号，不执行脚本"
-          else
-            python src/main_tiktok.py
-          fi
-          
+            if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
+              echo "没有配置TikTok账号，不执行脚本"
+              echo "::set-output name=code_generated::false"
+            else
+              python src/main_tiktok.py
+              echo "::set-output name=code_generated::true"
+            fi
+        
       - name: Commit
-        if: success() 
-        run: |
-          git config --global user.email github-actions[bot]@users.noreply.github.com
-          git config --global user.name github-actions[bot]
-          git add .
-          git commit -m "更新日常数据" -a
+          if: ${{ steps.python_scripts.outputs.code_generated == 'true' }}
+          run: |
+            git config --global user.email github-actions[bot]@users.noreply.github.com
+            git config --global user.name github-actions[bot]
+            git add .
+            git commit -m "更新日常数据" -a
   
       - name: Push changes
-        if: ${{ steps.python_scripts.outputs.code_generated == 'true' }}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          branch: master
-          force: true
+          if: ${{ steps.python_scripts.outputs.code_generated == 'true' }}
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.GH_TOKEN }}
+            branch: master
+            force: true
