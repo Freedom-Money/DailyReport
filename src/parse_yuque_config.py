@@ -5,7 +5,7 @@ from models.AccountConfig import AccountConfig
 import re
 
 
-def parse_yuque_config(config_url: str) -> set:
+def parse_yuque_config(config_url: str) -> list[AccountConfig]:
     """解析语雀账号配置
 
     Args:
@@ -28,14 +28,14 @@ def parse_yuque_config(config_url: str) -> set:
         configs = soup.find_all("table")
         rows = configs[0].find_all("tr")
 
-        results = set()
+        results = []
         for row in rows:
             cells = row.find_all("td")
             data = [cell.text for cell in cells]
             if data[0] == "序号":
                 continue
             account = AccountConfig(data[2], data[1], int(data[0]), data[4], data[3])
-            results.add(account)
+            results.append(account)
 
         return results
     except Exception as err:

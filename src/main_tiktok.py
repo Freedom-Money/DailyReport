@@ -22,7 +22,7 @@ def send_report(subject: str, body: str, file_path: str):
     wxpusher_token = config.user_config['wxpusher_token']
     wechat_uid = os.environ['WECHAT_UID']
     if (wechat_uid != None and wechat_uid != ""):
-        tmp = weixin_sender.send(body, subject, wxpusher_token, wechat_uid)
+        tmp = weixin_sender.send(subject, body,  wxpusher_token, wechat_uid)
         print("发送微信成功")
         print(tmp)
     # 发送邮件
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         # 读取环境变量配置
         yuque_doc_url = os.environ['YUQUE_DOC_URL']
 
-        accounts = set()
+        accounts = []
         try:
             accounts = parse_yuque_config.parse_yuque_config(yuque_doc_url)
         except Exception as err:
@@ -92,7 +92,6 @@ if __name__ == "__main__":
         users = []
         result = ""
         for item in accounts:
-            print(item)
             info = tiktok_utils.get_account_info(item, tiktok_cookie)
             if info == None:
                 info = AccountInfo(item, None, 0, 0, 0, 0)
