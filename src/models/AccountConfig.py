@@ -1,5 +1,5 @@
 class AccountConfig:
-    def __init__(self, uid: str, operater: str, number: int, remarks: str, deviceId: str) -> None:
+    def __init__(self,  number: int, operater: str, uid: str, deviceId: str, remarks: str) -> None:
         """账号配置
 
         Args:

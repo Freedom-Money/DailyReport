@@ -34,7 +34,7 @@ def parse_yuque_config(config_url: str) -> list[AccountConfig]:
             data = [cell.text for cell in cells]
             if data[0] == "序号":
                 continue
-            account = AccountConfig(data[2], data[1], int(data[0]), data[4], data[3])
+            account = AccountConfig(int(data[0]), data[1], data[2], data[3], data[4])
             results.append(account)
 
         return results

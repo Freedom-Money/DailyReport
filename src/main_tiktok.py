@@ -51,14 +51,11 @@ def write_to_excel(data: list, file_path: str):
         tmp_list = []
         for item in data:
             if item.is_valid == False:
-                tmp_list.append([item.number, item.operater, item.uid, item.deviceId,
-                                "-", "-", "-", "-", "-", "-", "-", "-", "-", 'uid配置错误，信息获取失败'])
+                tmp_list.append([item.number, item.operater, item.deviceId, item.uid, "-", "-", "-", "-"])
             else:
-                tmp_list.append([item.number, item.operater, item.uid, item.deviceId, item.video_change, "", item.fans_change, item.fans_count,
-                                item.follow_count, item.like_count, item.video_count, item.follow_change, item.like_change,  item.remarks])
+                tmp_list.append([item.number, item.operater, item.deviceId, item.uid, item.video_change, item.like_change, item.fans_count, item.video_count])
         df = pd.DataFrame(tmp_list)
-        df.columns = ['序号', '名字', '账号名', '机号', '今日视频量', '今日浏览量',
-                      '今日增粉量', '粉丝数', '关注数', '点赞数', '视频数', '今日关注变化', '今日点赞变化',  '备注']
+        df.columns = ['序号', '姓名', '机号', '账号', '今日视频量', '今日点赞量', '粉丝总数', '视频总数']
         df = df.sort_values(by='序号', ascending=True)
         df.to_excel(file_path, index=False)
     except Exception as err:
