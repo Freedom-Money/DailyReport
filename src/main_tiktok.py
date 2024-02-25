@@ -84,8 +84,7 @@ def parse_settings(yml_name: str) -> bool:
         if item['name'] == yml_name or yml_name.split('#')[0] == item['name']:
             config.user_config['wechat_uid'] = item['wechat_uid']
             config.user_config['yuque_doc_url'] = item['settings_url']
-            config.user_config['receive_email'] = json.loads(
-                item['receive_email'])
+            config.user_config['receive_email'] = item['receive_email']
             return True
     print(f"没有获取到 '{yml_name}' 对应的参数，请检查配置是否正确")
     return False

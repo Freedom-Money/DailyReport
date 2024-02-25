@@ -39,8 +39,8 @@ jobs:
       - name: 运行python脚本
         id: python_scripts
         run: |
-          if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
-            echo "没有配置TikTok账号，不执行脚本"
+          if [ -z "${{ vars.SETTINGS }}" ]; then
+            echo "没有配置参数，不执行脚本"
           else
             python src/main_tiktok.py ${{ steps.get_variables.outputs.WORKFLOW_NAME }}
           fi
