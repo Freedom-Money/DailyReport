@@ -2,11 +2,13 @@ from datetime import datetime
 import tiktok_utils
 import sender.weixin_sender as weixin_sender
 import os
+import sys
 import config
 import pickle
 import parse_yuque_config
 import sender.email_sender as email_sender
 import pandas as pd
+import json
 from models.AccountInfo import AccountInfo
 
 
@@ -28,14 +30,10 @@ def send_report(subject: str, body: str, file_path: str):
     # 发送邮件
     receive_email = os.environ['RECEIVE_EMAIL']
     if (receive_email != None and receive_email != ""):
-        if receive_email.find(",") > 0:
-            receive_emails = receive_email.split(",")
-            for item in receive_emails:
-                email_sender.send(
-                    os.environ['SEND_EMAIL'], os.environ['SEND_EMAIL_PASSWORD'], item, body, file_path)
-        else:
+        for item in receive_email:
+            print(item)
             email_sender.send(
-                os.environ['SEND_EMAIL'], os.environ['SEND_EMAIL_PASSWORD'], receive_email, body, file_path)
+                os.environ['SEND_EMAIL'], os.environ['SEND_EMAIL_PASSWORD'], item, body, file_path)
 
 
 def write_to_excel(data: list, file_path: str):
@@ -51,9 +49,11 @@ def write_to_excel(data: list, file_path: str):
         tmp_list = []
         for item in data:
             if item.is_valid == False:
-                tmp_list.append([item.number, item.operater, item.deviceId, item.uid, "-", "-", "-", "-"])
+                tmp_list.append([item.number, item.operater,
+                                item.deviceId, item.uid, "-", "-", "-", "-"])
             else:
-                tmp_list.append([item.number, item.operater, item.deviceId, item.uid, item.video_change, item.like_change, item.fans_count, item.video_count])
+                tmp_list.append([item.number, item.operater, item.deviceId, item.uid,
+                                item.video_change, item.like_change, item.fans_count, item.video_count])
         df = pd.DataFrame(tmp_list)
         df.columns = ['序号', '姓名', '机号', '账号', '今日视频量', '今日点赞量', '粉丝总数', '视频总数']
         df = df.sort_values(by='序号', ascending=True)
@@ -63,12 +63,47 @@ def write_to_excel(data: list, file_path: str):
         print(err)
 
 
+def parse_settings(yml_name: str) -> bool:
+    """获取系统设置
+
+    Args:
+        yml_name (str): actions配置文件名称
+
+    Returns:
+        bool: _description_
+    """
+    print(f"yml_name: {yml_name}")
+    settings = []
+    try:
+        settings = json.loads(os.environ['SETTINGS'])
+    except json.JSONDecodeError:
+        print(f"解析参数失败，可能是参数格式设置错误\n:{settings}")
+        return False
+
+    yuque_doc_url = None
+    for item in settings:
+        if item['name'] == yml_name or yml_name.split('.')[0] == item['name']:
+            os.environ['YUQUE_DOC_URL'] = item['settings_url']
+            os.environ['WECHAT_UID'] = item['wechat_uid']
+            os.environ['RECEIVE_EMAIL'] = item['receive_email']
+            return True
+    print(f"没有获取到 '{yml_name}' 对应的参数，请检查配置是否正确")
+    return False
+
+
 if __name__ == "__main__":
     try:
         # 读取项目配置
         tiktok_cookie = config.user_config['tiktok_cookie']
         # 读取环境变量配置
         yuque_doc_url = os.environ['YUQUE_DOC_URL']
+
+        args = sys.argv[1:]  # 排除脚本名称
+        yml_name = args[0]
+        if not parse_settings(yml_name):
+            if yml_name != 'report_demo':
+                raise Exception("获取配置失败")
+            sys.exit(1)
 
         accounts = []
         try:

@@ -8,11 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      WECHAT_UID: ${{ vars.WECHAT_UID }}
-      YUQUE_DOC_URL: ${{ vars.YUQUE_DOC_URL }}
-      RECEIVE_EMAIL: ${{ vars.RECEIVE_EMAIL }}
       SEND_EMAIL: ${{ vars.SEND_EMAIL }}
       SEND_EMAIL_PASSWORD: ${{ secrets.SEND_EMAIL_PASSWORD }}
+      SETTINGS: ${{ vars.SETTINGS }}
 
     steps:
       - name: Checkout repository
@@ -27,6 +25,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          
+      - name: 获取yaml文件名
+        id: get_variables
+        run: |
+          WORKFLOW_PATH="${{ github.workflow }}"
+          WORKFLOW_NAME=$(basename $WORKFLOW_PATH)
+          WORKFLOW_NAME=${WORKFLOW_NAME/\.yml/}
+          WORKFLOW_NAME=${WORKFLOW_NAME/.*/}
+          WORKFLOW_NAME=${WORKFLOW_NAME^^}
+          echo "WORKFLOW_NAME=$WORKFLOW_NAME" >> $GITHUB_OUTPUT
 
       - name: 运行python脚本
         id: python_scripts
@@ -34,5 +42,5 @@ jobs:
           if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
             echo "没有配置TikTok账号，不执行脚本"
           else
-            python src/main_tiktok.py
+            python src/main_tiktok.py ${{ steps.get_variables.outputs.WORKFLOW_NAME }}
           fi
