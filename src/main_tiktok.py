@@ -22,13 +22,13 @@ def send_report(subject: str, body: str, file_path: str):
     """
     # 发送微信
     wxpusher_token = config.user_config['wxpusher_token']
-    wechat_uid = os.environ['WECHAT_UID']
+    wechat_uid = config.user_config['wechat_uid']
     if (wechat_uid != None and wechat_uid != ""):
         tmp = weixin_sender.send(subject, body,  wxpusher_token, wechat_uid)
         print("发送微信成功")
         print(tmp)
     # 发送邮件
-    receive_email = os.environ['RECEIVE_EMAIL']
+    receive_email = config.user_config['receive_email']
     if (receive_email != None and receive_email != ""):
         for item in receive_email:
             print(item)
@@ -76,16 +76,16 @@ def parse_settings(yml_name: str) -> bool:
     settings = []
     try:
         settings = json.loads(os.environ['SETTINGS'])
-    except json.JSONDecodeError:
-        print(f"解析参数失败，可能是参数格式设置错误\n:{settings}")
+    except json.JSONDecodeError as err:
+        print(f"解析参数失败，可能是参数格式设置错误\n:{err}")
         return False
 
-    yuque_doc_url = None
     for item in settings:
         if item['name'] == yml_name or yml_name.split('#')[0] == item['name']:
-            os.environ['YUQUE_DOC_URL'] = item['settings_url']
-            os.environ['WECHAT_UID'] = item['wechat_uid']
-            os.environ['RECEIVE_EMAIL'] = item['receive_email']
+            config.user_config['wechat_uid'] = item['wechat_uid']
+            config.user_config['yuque_doc_url'] = item['settings_url']
+            config.user_config['receive_email'] = json.loads(
+                item['receive_email'])
             return True
     print(f"没有获取到 '{yml_name}' 对应的参数，请检查配置是否正确")
     return False
@@ -95,8 +95,6 @@ if __name__ == "__main__":
     try:
         # 读取项目配置
         tiktok_cookie = config.user_config['tiktok_cookie']
-        # 读取环境变量配置
-        yuque_doc_url = os.environ['YUQUE_DOC_URL']
 
         args = sys.argv[1:]  # 排除脚本名称
         yml_name = args[0]
@@ -105,6 +103,7 @@ if __name__ == "__main__":
                 raise Exception("获取配置失败")
             sys.exit(1)
 
+        yuque_doc_url = config.user_config['yuque_doc_url']
         accounts = []
         try:
             accounts = parse_yuque_config.parse_yuque_config(yuque_doc_url)
