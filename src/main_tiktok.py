@@ -82,7 +82,7 @@ def parse_settings(yml_name: str) -> bool:
 
     yuque_doc_url = None
     for item in settings:
-        if item['name'] == yml_name or yml_name.split('.')[0] == item['name']:
+        if item['name'] == yml_name or yml_name.split('#')[0] == item['name']:
             os.environ['YUQUE_DOC_URL'] = item['settings_url']
             os.environ['WECHAT_UID'] = item['wechat_uid']
             os.environ['RECEIVE_EMAIL'] = item['receive_email']
