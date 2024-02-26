@@ -1,0 +1,38 @@
+name: TikTok报告 - 手动触发
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_python_script:
+    runs-on: ubuntu-latest
+
+    env:
+      WECHAT_UID: ${{ vars.WECHAT_UID }}
+      YUQUE_DOC_URL: ${{ vars.YUQUE_DOC_URL }}
+      RECEIVE_EMAIL: ${{ vars.RECEIVE_EMAIL }}
+      SEND_EMAIL: ${{ vars.SEND_EMAIL }}
+      SEND_EMAIL_PASSWORD: ${{ secrets.SEND_EMAIL_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+
+      - name: 安装依赖环境
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 运行python脚本
+        id: python_scripts
+        run: |
+          if [ -z "${{ vars.YUQUE_DOC_URL }}" ]; then
+            echo "没有配置TikTok账号，不执行脚本"
+          else
+            python src/main_tiktok.py
+          fi
